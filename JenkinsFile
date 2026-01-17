@@ -1,61 +1,36 @@
 pipeline {
     agent any
-
-    tools {
-        jdk 'Java21'
+    tools{
+        jdk 'Java17'
         maven 'Maven'
     }
-
-    environment {
-        IMAGE_NAME = "spr-jen-demo"
-        IMAGE_TAG  = "1.0"
-        CONTAINER_NAME = "spr-jen-demo-container"
-    }
-
     stages {
-
         stage('Checkout Code') {
             steps {
-                echo 'Checking out code from GitHub'
-                git branch: 'main',
-                    credentialsId: 'git.cred',
-                    url: 'https://github.com/SIVASANGARANKK/spr-jen-demo.git'
+                echo 'Pulling from Github'
+				git branch: 'main', credentialsId: 'git.cred', url: 'https://github.com/SIVASANGARANKK/spr-jen-demo.git'
             }
         }
-
-        stage('Build Spring Boot JAR') {
+        
+        stage('Build Project') {
             steps {
-                echo 'Building Spring Boot application (tests skipped)'
+                echo 'Building Java project'
                 bat 'mvn clean package -DskipTests'
             }
         }
-
-        stage('Build Docker Image') {
+       
+        stage('Run Application') {
             steps {
-                echo 'Building Docker image'
-                bat """
-                docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
-                """
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                echo 'Running Spring Boot application in Docker'
-                bat """
-                docker rm -f %CONTAINER_NAME% 2>nul || exit 0
-                docker run -d -p 8080:8080 --name %CONTAINER_NAME% %IMAGE_NAME%:%IMAGE_TAG%
-                """
+                bat 'java -jar target/spr-jen-demo-0.0.1-SNAPSHOT.jar --server.port=0'
             }
         }
     }
-
-    post {
-        success {
-            echo '✅ Spring Boot app built and running successfully!'
+    post { 
+        success { 
+            echo 'Build and Run is SUCCESSFUL!'
         }
-        failure {
-            echo '❌ Build failed. Please check Jenkins logs.'
+        failure{
+            echo 'OOPS!!! Failure.'
         }
     }
 }
