@@ -8,7 +8,6 @@ public class SprJenDemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SprJenDemoApplication.class, args);
-		System.out.println("Sprinboot from Jenkins");
+	}
 
-}
 }
