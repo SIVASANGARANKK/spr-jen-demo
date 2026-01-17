@@ -19,11 +19,11 @@ pipeline {
             }
         }
        
-        stage('Run Application') {
-            steps {
-                bat 'java -jar target/spr-jen-demo-0.0.1-SNAPSHOT.jar --server.port=0'
-            }
-        }
+       // stage('Run Application') {
+            //steps {
+            //    bat 'java -jar target/spr-jen-demo-0.0.1-SNAPSHOT.jar --server.port=0'
+          //  }
+        //}
     }
     post { 
         success { 
